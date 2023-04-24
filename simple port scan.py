@@ -1,114 +1,103 @@
-import ctypes
-from datetime import datetime
-import re
-import nvdlib
-import socket
-import pyfiglet
-import sys
-import io
-import os
-import nmap
-from pathlib import Path
-from pyExploitDb import PyExploitDb
-import colorama
-from colorama import Fore
+try:
+    print("\n[♦] Identificando requisitos para la ejecución del programa...\n")
+    import time
+    import ctypes
+    import string
+    from datetime import datetime
+    import re
+    import nvdlib
+    import socket
+    import pyfiglet
+    import sys
+    import io
+    import os
+    import nmap
+    from pathlib import Path
+    from pyExploitDb import PyExploitDb
+    import colorama
+    from colorama import Fore
+    colorama.init()
+    print(Fore.BLUE + "\n[♦]" +
+          Fore.YELLOW + " Modulos importados correctamente, procediendo con la ejecución del programa")
+    time.sleep(1)
+except Exception as e:
+    # If there are any errors encountered during the importing of the modules,
+    # then we display the error message on the console screen
+    print('Existen modulos necesario que no tiene instalado... \n{}'.format(e))
+    print("Para instalar los modulos necesarios ejecte el siguente comando \n 'pip install -r requirements.txt'")
 
 
-# Continuar subetting
-# Juntar info de nmap y de base de datos.
-
-
-colorama.init()
-location = "{}\\Desktop\\".format(Path.home())
-file = "scan"
-extension = ".log"
-
-# os.system('color a')
 nm = nmap.PortScanner()
 open_ports = []
 
 
-def print_log(log):
-    with open(location + file + extension, "a") as file_log:
-        file_log.write("\n")
-        file_log.write(log)
+def verifi_tools():
+    pass
 
+
+def clean():
+    if os.name == "posix":
+        os.system("clear")
+    else:
+        os.system("cls")
 
 
 def is_admin():
     if ctypes.windll.shell32.IsUserAnAdmin() == 0:
-        print("ESTA HERRAMIENTA NECESITA PERMISOS DE ADMINISTRADOR / ROOT.")
+        print(Fore.RED + "ESTA HERRAMIENTA NECESITA PERMISOS DE ADMINISTRADOR / ROOT.")
         exit()
 
 
-def check_start():
-    # Defining a target
-    try:
-        if sys.argv[1]:
-            # change hostname to IPv4
+def print_help():
+    print(Fore.YELLOW + """
+        ╔════════════════════════════════════════════════╗
+        ║                                                ║
+        ║    --  Usabilidad 'PORT SCANNER' v0.4.0  --    ║        
+        ║                                                ║
+        ╚════════════════════════════════════════════════╝""" +
 
-            if re.findall("[.]", sys.argv[1]) == [".", ".", "."]:
-                veryfy = sys.argv[1].split(".")
-                for num in veryfy:
-                    if int(num) > 255:
-                        print("\nDirección IPv4 inválida.\n")
-                        exit()
-            try:
-                target = socket.gethostbyname(sys.argv[1])
-                funcions(target)
-            except socket.gaierror:
-                print('Direccion IPv4 inválida')
-                exit()
-    except IndexError:
-        print(Fore.RED + """
- ║
- ╠══════► Obligatorio --> Direccion IP / Puertos a analizar.  
- ║
- ╠══════► Tipología   --> <name_script> <ip_address>  
- ║  
- ╚══════► EJEMPLO 	  --> port_scaner.py 127.0.0.1 """)
-        exit()
+          Fore.GREEN + "\n\nArgumentos de la herramienta:\n\n" +
+          Fore.BLUE + "[♦]" + Fore.YELLOW + " Enter IP --> IP OBETIVO\n" +
+    Fore.CYAN + """
+            ║       
+            ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1\n""" +
 
-    except ValueError:
-        print('Debes introducir NUMEROS...')
-        print(Fore.RED + """
-         ║
-         ╠══════► Obligatorio --> Direccion IP / Puertos a analizar.  
-         ║
-         ╠══════► Tipología   --> <name_script> <ip_address>  
-         ║  
-         ╚══════► EJEMPLO 	  --> port_scaner.py 127.0.0.1 """)
-        exit()
+Fore.BLUE + "\n[♦]" + Fore.YELLOW + ' Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)\n' +
+
+          Fore.CYAN + """ 
+            ║       
+            ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)\n""" +
 
 
-def num_ports():
-    global ports
-    while True:
-        ports = input(Fore.YELLOW + '\nIntroduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500) --> ')
-        if 'help' in ports:
-            if os.name == "posix":
-                os.system("clear")
-            else:
-                os.system("cls")
-            banner()
-            print(Fore.GREEN + """---- Usabilidad "PORT SCANNER" v0.3.8 ----
-Esta herramienta está pensada para ser muy facil de utilizar.    
-Solamente se tiene que escribir el nº máximo de puertos. (500 -- Los primeros 500 Puertos)
-
-1. Se ejecuta un escaneo de puertos para localizar los abiertos
+         Fore.YELLOW + "\n\n              -- PROCEDIMIENTO UTILIZADO POR LA HERRAMIENTA --\n\n" +
+Fore.CYAN + """1. Se ejecuta un escaneo de puertos para localizar los abiertos
 
 2. Ejecutamos un analisis de servicios de dichos puertos abiertos, identificamos información sobre 
-los servicios encontrados 
+   los servicios encontrados 
 
 3. Iniciamos una busqueda de vulnerabilidades públicas en dichos servicios...
 
 4. Tenemos la opcion de buscar en la base de datos de ExploitDb algún exploit público.
 
-5. Podemos abrir metasploit para utilziar la informacion recopilada anteriomente para lo que tengamos que hacer
+5. Podemos abrir metasploit para utilziar la informacion recopilada
+   anteriomente para lo que tengamos que hacer""" +
 
-Para ejecutar este script necesitamos de varios requisitos:
+Fore.GREEN + """\n\nREQUISITOS:\n
             - NMAP
             - Metasploit (opcional)""")
+
+
+def num_ports():
+    global ports
+    while True:
+        print(Fore.BLUE + "\n[♦]" +
+              Fore.YELLOW + ' Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)')
+        ports = input("""
+    ╚═► """)
+        if 'help' in str(ports):
+            clean()
+            banner()
+            print_help()
         else:
             try:
                 ports = int(ports)
@@ -123,23 +112,22 @@ Para ejecutar este script necesitamos de varios requisitos:
 
 def banner():
     print(Fore.GREEN + """\n
-  ╔═════════╗                                                 ╔═════════╗
-  ║         ║                                                 ║         ║
-  ║     ╔═════════════════════════════════════════════════════════╗     ║
-  ╚═════║  				   		          ║═════╝                                    
-        ║   ____   ___  ____ _____   ____   ____    _    _   _ ©  ║
-        ║  |  _ \ / _ \|  _ \_   _| / ___| / ___|  / \  | \ | |   ║
-        ║  | |_) | | | | |_) || |   \___ \| |     / _ \ |  \| |   ║
-        ║  |  __/| |_| |  _ < | |    ___) | |___ / ___ \| |\  |   ║
-        ║  |_|    \___/|_| \_\|_|   |____/ \____/_/   \_\_| \_|   ║
-        ║							  ║                                   
-        ║                                           v0.3.9        ║
-        ╚═════════════════════════════════════════════════════════╝                                                                          
-
+    
+                                                                                © 
+ ██▓███   ▒█████   ██▀███  ▄▄▄█████▓     ██████  ▄████▄   ▄▄▄       ███▄    █ 
+▓██░  ██▒▒██▒  ██▒▓██ ▒ ██▒▓  ██▒ ▓▒   ▒██    ▒ ▒██▀ ▀█  ▒████▄     ██ ▀█   █ 
+▓██░ ██▓▒▒██░  ██▒▓██ ░▄█ ▒▒ ▓██░ ▒░   ░ ▓██▄   ▒▓█    ▄ ▒██  ▀█▄  ▓██  ▀█ ██▒
+▒██▄█▓▒ ▒▒██   ██░▒██▀▀█▄  ░ ▓██▓ ░      ▒   ██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▓██▒  ▐▌██▒
+▒██▒ ░  ░░ ████▓▒░░██▓ ▒██▒  ▒██▒ ░    ▒██████▒▒▒ ▓███▀ ░ ▓█   ▓██▒▒██░   ▓██░
+▒▓▒░ ░  ░░ ▒░▒░▒░ ░ ▒▓ ░▒▓░  ▒ ░░      ▒ ▒▓▒ ▒ ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ 
+░▒ ░       ░ ▒ ▒░   ░▒ ░ ▒░    ░       ░ ░▒  ░ ░  ░  ▒     ▒   ▒▒ ░░ ░░   ░ ▒░
+░░       ░ ░ ░ ▒    ░░   ░   ░         ░  ░  ░  ░          ░   ▒      ░   ░ ░ 
+             ░ ░     ░                       ░  ░ ░            ░  ░         ░ 
+                                                ░                                                                                                 
+                                                
        [INFO] Herramienta para analizar puertos de una dirección IP 
-
              ║                                                 ║                                                                                             
-             ║                                                 ║
+             ║                    v0.4.0                       ║
              ╚══════► Escriba --help para obtener ayuda ◄══════╝
                     \n\n""")
 
@@ -154,67 +142,29 @@ def init(now, target):
 
 def graph(target):
     # Escaneo de puertos gráfico
-    if os.name == "posix":
-        os.system("clear")
-    else:
-        os.system("cls")
+    clean()
     banner()
     num_ports()
-    if os.name == "posix":
-        os.system("clear")
-    else:
-        os.system("cls")
+    clean()
     banner()
     # Banner
     scan(target)
 
 
-def ping(ip_address):
-    """
-    Pings the given IP address to check if it's active or not.
-    """
-    response = os.system("ping -n 1 " + ip_address)
-    if response == 0:
-        alive = True
-    else:
-        alive = False
-
-    return alive
-
-
 def funcions(target):
     banner()
     # Añadir funciones preguntando antes de los puertos.
-    print(Fore.YELLOW + "Que herramienta quieres utilizar?")
+    print(Fore.BLUE + "[♦]" + Fore.YELLOW + " Que herramienta quieres utilizar?")
     print(Fore.YELLOW + "-" * 50)
-    print(Fore.YELLOW + 'A: --> Port and vuln scan\n \nB: --> Metasploit.\n \nC: --> Subnet Scan')
+    print(Fore.BLUE + 'A:' + Fore.YELLOW + ' --> Port and vuln scan' + '\n \n'
+          + Fore.BLUE + 'B:' + Fore.YELLOW + ' --> Metasploit.\n')
     fun = None
     while not fun:
-        fun = input(Fore.YELLOW + "\n ---> ")
+        fun = input(Fore.YELLOW + "         ╚═► ")
         if 'help' in fun:
-            if os.name == "posix":
-                os.system("clear")
-            else:
-                os.system("cls")
+            clean()
             banner()
-            print(Fore.GREEN + """---- Usabilidad "PORT SCANNER" v0.3.8 ----
-Esta herramienta está pensada para ser muy facil de utilizar.    
-Solamente se tiene que escribir el nº máximo de puertos. (500 -- Los primeros 500 Puertos)
-
-1. Se ejecuta un escaneo de puertos para localizar los abiertos
-
-2. Ejecutamos un analisis de servicios de dichos puertos abiertos, identificamos información sobre 
-los servicios encontrados 
-
-3. Iniciamos una busqueda de vulnerabilidades públicas en dichos servicios...
-
-4. Tenemos la opcion de buscar en la base de datos de ExploitDb algún exploit público.
-
-5. Podemos abrir metasploit para utilziar la informacion recopilada anteriomente para lo que tengamos que hacer
-
-Para ejecutar este script necesitamos de varios requisitos:
-        - NMAP
-        - Metasploit (opcional)""")
+            print_help()
 
             print(Fore.YELLOW + "\nQue herramienta quieres utilizar?")
             print("-" * 50)
@@ -231,110 +181,120 @@ Para ejecutar este script necesitamos de varios requisitos:
                 break
             except Exception as error:
                 print(Fore.RED + "ERROR: {}\nPrueba a reinstalar o instalar metasploit.".format(error))
-        elif fun in ['c', 'C']:
-            print('Subetting scan')
-
         else:
             print(Fore.RED + "Introduce una opción válida, has escogido '{}',"
                              " que no está entre las opciones disponibles".format(fun))
             fun = None
 
 
-def scan(target):
-    # Confirmacion con ping y resultado
-    try:
-        while True:
-            if os.name == "posix":
-                os.system("clear")
-            else:
-                os.system("cls")
-            banner()
-            # Confirmación con PING?
-            p = input(Fore.YELLOW + '¿Quieres hacer una confirmación con PING?\n'
-                      'El host puede tener un FireWall bien configurado que bloquee este tipo de paquetes.\n'
-                      'Si sabes que esta activo no ejecutes la confirmación. [S/n] -->')
+def ping(ip_address):
+    global alive
+    while True:
+        clean()
+        banner()
+        # Confirmación con PING?
 
-            # En línea o no
-            if p in ['S', 's']:
-                global alive
-                alive = ping(target)
-                if alive:
-                    if os.name == "posix":
-                        os.system("clear")
-                    else:
-                        os.system("cls")
+        p = input(Fore.YELLOW + '¿Quieres hacer una confirmación con PING?\n'
+                                'El host puede tener un FireWall bien configurado que bloquee este tipo de paquetes.\n'
+                                'Si sabes que esta activo no ejecutes la confirmación. [S/n] -->')
+
+        # En línea o no
+        if p in ['S', 's']:
+
+            """
+            Pings the given IP address to check if it's active or not.
+            """
+            response = os.system("ping -n 1 " + ip_address)
+            if response == 0:
+                alive = True
+            else:
+                alive = False
+            return alive
+
+        elif p in ['n', 'N']:
+            alive = None
+            break
+        else:
+            print(Fore.RED + "Indicación inválida... [S/n]")
+
+    return alive
+
+
+def scan(target):
+    try:
+        # Confirmacion con ping y resultado
+        ping(target)
+        if alive is None:
+            pass
+
+        elif not alive:
+            a = None
+            while not a:
+                a = input(Fore.YELLOW + "¿El host no está en línea, quieres salir del programa...? [S/n]\n")
+                if a.lower() == "s":
+                    exit()
+                elif a.lower() == "n":
                     break
                 else:
-                    print(Fore.YELLOW + "El host no está en línea, saliendo del programa...")
-                    exit()
-            elif p in ['n', 'N']:
-                if os.name == "posix":
-                    os.system("clear")
-                else:
-                    os.system("cls")
-                break
-            else:
-                print(Fore.RED + "Indicación inválida... [S/n]")
+                    print("Introduccion inválida...")
 
         # Inicio del analisis.
-        now = datetime.now()
+        clean()
+
         banner()
-        try:
-            if alive:
-                print(Fore.YELLOW + 'El HOST está en línea.')
-        except NameError:
+        if alive:
+            print(Fore.YELLOW + 'El HOST está en línea.')
+        elif alive is None:
             print(Fore.YELLOW + 'No se ha realizado la confirmación con PING')
-        init(now, target)
 
-        for port in range(1, ports + 1):
-            try:
-                print("\r" + 'Analizando Puerto : %s/%s [%s%s] %.2f%%' % (port, ports, "▓" * int(port * 25 / ports),
-                                                                          "▒" * (25 - int(port * 25 / ports)),
-                                                                          float(port / ports * 100)), end="")
-
-                # Creamos el Socket para la conexión
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                # Definimos tiempo máximo de espera a la conexion
-                socket.setdefaulttimeout(0.15)
-                # creamos la conexion
-                result = s.connect_ex((target, port))
-                # Si resulta victorioisa la conexion informamos de puerto abierto
-                if result == 0:
-                    open_ports.append(port)
-                    if os.name == "posix":
-                        os.system("clear")
-                    else:
-                        os.system("cls")
-                    banner()
-                    init(now, target)
-                    for open_port in open_ports:
-                        print("[♦] - El puerto {} esta abierto.".format(open_port))
-                        print("-" * 50)
-
-
-                s.close()
-            # Excepciones del código
-            except KeyboardInterrupt:
-                end = datetime.now()
-                elapsed = end - now
-                print(Fore.YELLOW + '\nAnálisis interrumpido en el puerto {}.'.format(port))
-                print(Fore.YELLOW + 'Final del análisis --> {}\n'.format(elapsed))
-                break
-            except Exception as e:
-                print("Error inesperado : {}".format(e))
-
-        # Final del analisis
-        end = datetime.now()
-        if not open_ports:
-            elapsed = end - now
-            print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format(elapsed))
-            print(Fore.YELLOW + "\nNo se han detectado puertos abiertos. :_(")
-            exit()
-        print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format((end - now)))
-        ports_used(open_ports, target)
-    # Creamos la salida del programa
     except socket.gaierror:
         print(Fore.RED + "\nNo se ha encontrado el HOST")
+    now = datetime.now()
+    init(now, target)
+
+    for port in range(1, ports + 1):
+        try:
+            print("\r" + 'Analizando Puerto : %s/%s [%s%s] %.2f%%' % (port, ports, "▓" * int(port * 25 / ports),
+                                                                      "▒" * (25 - int(port * 25 / ports)),
+                                                                      float(port / ports * 100)), end="")
+
+            # Creamos el Socket para la conexión
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # Definimos tiempo máximo de espera a la conexion
+            socket.setdefaulttimeout(0.2)
+            # creamos la conexion
+            result = s.connect_ex((target, port))
+            # Si resulta victorioisa la conexion informamos de puerto abierto
+            if result == 0:
+                open_ports.append(port)
+                clean()
+                banner()
+                init(now, target)
+                for open_port in open_ports:
+                    print("[♦] - El puerto {} esta abierto.".format(open_port))
+                    print("-" * 50)
+            else:
+                continue
+            s.close()
+        # Excepciones del código
+        except KeyboardInterrupt:
+            end = datetime.now()
+            elapsed = end - now
+            print(Fore.YELLOW + '\n\nAnálisis interrumpido en el puerto {}.'.format(port))
+            print(Fore.YELLOW + 'Final del análisis --> {}\n'.format(elapsed))
+            break
+        except Exception as e:
+            print("Error inesperado : {}".format(e))
+
+    # Final del analisis
+    end = datetime.now()
+    if not open_ports:
+        elapsed = end - now
+        print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format(elapsed))
+        print(Fore.YELLOW + "\nNo se han detectado puertos abiertos. :_(")
+        exit()
+    print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format((end - now)))
+    ports_used(open_ports, target)
 
 
 def ports_used(open_ports, target):
@@ -345,8 +305,7 @@ def ports_used(open_ports, target):
     check_serv(target, p_str, open_ports)
 
 
-def check_serv(target, p_str, open_ports):
-    # Preguntamos si quiere analisis de versiones de servicio
+def serv_search():
     while True:
         serv = input(Fore.YELLOW + r"[♦] ¿Quieres ejecutar un analisis completo a los puertos abiertos? [S/n] --> ")
         if serv in ["S", 's']:
@@ -358,24 +317,34 @@ def check_serv(target, p_str, open_ports):
                 exit()
             else:
                 break
-    # Hora del inicio
-    init_scan_service = datetime.now()
-    # banner del escaneo de servicios
+
+
+def graph_serv(init_scan_service):
     ascii_part = pyfiglet.figlet_format("Service  SCAN")
     print(ascii_part)
     print("\n" + "-" * 50)
 
     print("""Escaneando versiones de servicio... 
-    ╚══════► Esto puede tardar un poco, vale la pena.\n""")
+        ╚══════► Esto puede tardar un poco, vale la pena.\n""")
     print("\nAnálisis iniciado --> {}".format(init_scan_service))
     print("-" * 50 + "\n")
 
 
+def check_serv(target, p_str, open_ports):
+    # Preguntamos si quiere analisis de versiones de servicio
+    serv_search()
+
+    # Hora del inicio
+    init_scan_service = datetime.now()
+
+    # banner del escaneo de servicios
+    graph_serv(init_scan_service)
 
     # Inicio de análisis de nmap
-    nm.scan(target, arguments="-p {} --script vuln -sC -sV --version-intensity 5 -A -O".format(p_str))
+    nm.scan(target, arguments="-p {} --script vuln -sC -sV --version-intensity 5 -n -T4 -A -O".format(p_str))
     end_service_scan = datetime.now()
     dict_serv = {}
+
     for p in open_ports:
         p = int(p)
 
@@ -387,11 +356,11 @@ def check_serv(target, p_str, open_ports):
         version = nm[target]['tcp'][int(p)]['version']
         extrainfo = nm[target]['tcp'][int(p)]['extrainfo']
         cpe = nm[target]['tcp'][int(p)]['cpe']
-        all_host = None
+
         try:
             all_host = nm[target]['hostscript']
         except KeyError:
-            pass
+            all_host = None
         # Añadimos al diccionario para la búsqueda de vulners
         if product == "":
             dict_serv[p] = {
@@ -440,6 +409,10 @@ def check_serv(target, p_str, open_ports):
                     print(Fore.GREEN + f"\n {ids} : {output}")
                     print(Fore.GREEN + "\n" + "═" * 30 + "►", "\n")
 
+    print_information(target, end_service_scan, init_scan_service, dict_serv)
+
+
+def print_information(target, end_service_scan, init_scan_service, dict_serv):
     # Tipo de sistema encontrado
     ip = nm[target]['addresses']['ipv4']
     ip_vendor = nm[target]['vendor']
@@ -450,16 +423,27 @@ def check_serv(target, p_str, open_ports):
     vendor = nm[target]['osmatch'][0]['osclass'][0]['vendor']
     sys_cpe = nm[target]['osmatch'][0]['osclass'][0]['cpe'][0]
 
+    def how_print():
+        if ip_vendor == "N/D":
+            return ip_vendor
+        else:
+            return [data for data in ip_vendor]
+
     # Imprimimos la informacion del sistema
     print(Fore.YELLOW + "\nINFORMACIÓN DEL SISTEMA OBJETIVO")
     print(Fore.GREEN + "\n" + "-" * 50, "\n")
     print(Fore.GREEN + "SISTEMA --> {}\n     --\nPrecisión --> {}\n     --\nVendedor --> {}\n     --\n"
                        "CPE: {}\n     --\nIP: {}\n     --\nMAC & Vendor: {}"
-          .format(name_os, accuracy, vendor, sys_cpe, ip,[data for data in ip_vendor]))
+          .format(name_os, accuracy, vendor, sys_cpe, ip, how_print()))
 
     elapsed = (end_service_scan - init_scan_service)
     print("\n" + "-" * 50)
     print("Tiempo transcurrido duante el analisis -> {}".format(elapsed))
+
+    vlnsrch(dict_serv)
+
+
+def vlnsrch(dict_serv):
     # Analisis de vulners?
     while True:
         vuln = input(
@@ -474,15 +458,19 @@ def check_serv(target, p_str, open_ports):
             print(Fore.RED + 'Introduzca una opción válida... [S/n]')
 
 
+def graph_vuln():
+    ascii_part_2 = pyfiglet.figlet_format("Vulner SCAN")
+    print(Fore.YELLOW + ascii_part_2)
+    print('Contactando con la base de datos, espere porfavor')
+
+
 def scan_vuln_services(dict_serv):
     # Banner vulerns
-    ascii_part_2 = pyfiglet.figlet_format("Vulner SCAN")
+    graph_vuln()
+
+    count = 0
     vulner = {}
-    print(Fore.YELLOW + ascii_part_2)
 
-    print('Abriendo base de datos, espere porfavor')
-
-    vuln = False
     # Busqueda de vulers
     for prt in dict_serv:
         name = dict_serv[prt]['name']
@@ -490,7 +478,8 @@ def scan_vuln_services(dict_serv):
         service = "{} {}".format(name, version)
 
         if version == "":
-            print(Fore.RED + f'\n[-] No se ha detectado una versión en el serivcio {name}, falta de información para continuar la busqueda. \n')
+            print(Fore.RED + f'\n[-] No se ha detectado una versión en el serivcio {name}'
+                             f', falta de información para continuar la busqueda. \n')
             continue
 
         try:
@@ -534,63 +523,65 @@ def scan_vuln_services(dict_serv):
                                                                dificulty, severity,
                                                                exploit_score, access,
                                                                desc, url))
+
             vulner[cve] = {"name": name,
                            "service": service}
-            vuln = True
+            count += 1
 
         # Excepciones para no vulenr
         except IndexError:
             print(Fore.RED + "\n[-] No vulnerabildades detectadas en el servicio {}".format(service))
-    if not vuln:
+    if count == 0:
         print(Fore.RED + "\n[-] No se han detectado vulnerabilidades públicas en los sevicios...")
         exit()
     else:
-        while True:
-            # Buscamos exploits públicos?
-            search_exp = input(Fore.YELLOW + '\n¿Deseas buscar exploits en la base de datos de EXPLOITdB? [S/n]')
-            if search_exp in ['s', 'S']:
-                search_exploit(vulner)
-                break
-            elif search_exp in ['n', 'N']:
-                print("Has escogido NO buscar el exploit.\n")
-                if input('¿Seguro?  [C]errar/[B]uscar ->') in ['c', 'C']:
-                    print("Cerrando programa")
-                    exit()
-                else:
-                    search_exploit(vulner)
+        expsrch(vulner)
+
+
+def expsrch(vulner):
+    while True:
+        # Buscamos exploits públicos?
+        search_exp = input(Fore.YELLOW + '\n¿Deseas buscar exploits en la base de datos de EXPLOITdB? [S/n]')
+        if search_exp in ['s', 'S']:
+            search_exploit(vulner)
+            break
+        elif search_exp in ['n', 'N']:
+            print("Has escogido NO buscar el exploit.\n")
+            if input('¿Seguro?  [C]errar/[B]uscar ->') in ['c', 'C']:
+                print("Cerrando programa")
+                exit()
             else:
-                print(Fore.RED + "Opción inválida...")
+                search_exploit(vulner)
+        else:
+            print(Fore.RED + "Opción inválida...")
 
 
-def no_print(pEdb):
+def no_print(pedb):
     # Creamos un objeto StringIO vacío que descarta los datos
     fake_stdout = io.StringIO()
-
     # Redirigimos la salida estándar a nuestro objeto StringIO falso
     sys.stdout = fake_stdout
-
     # Abrimos y actualizamos base de datos
-    pEdb.openFile()
-
+    pedb.openFile()
     # Restauramos la salida estándar original
     sys.stdout = sys.__stdout__
 
 
 def search_exploit(vulner):
     # Preparamos la busqueda de exploits
-    pEdb = PyExploitDb()
-    pEdb.debug = False
+    pedb = PyExploitDb()
+    pedb.debug = False
     input(Fore.YELLOW + "Esto puede tardar un poco y algunos antivirus lo detectan como virus."
                         " Tendremos a nuestra disposición todos los exploits públicos de ExploitdB."
                         " \n[ENTER] -- [CTRL + C]/Salir \n")
 
     # Actualizamos abse de datos sin printear en consola
-    no_print(pEdb)
+    no_print(pedb)
 
-    exp = None
+    count = 0
     # Buscamos los exploits
     for vlr in vulner:
-        results = pEdb.searchCve(vlr)
+        results = pedb.searchCve(vlr)
         try:
             if not results:
                 print(Fore.RED + "[-] No se han encontrado exploits públicos para el CVE: {}".format(vlr))
@@ -598,22 +589,14 @@ def search_exploit(vulner):
 
             # Procesamos los datos
             else:
-                if results['file']:
-                    exp = True
-                    location = results['file']
-                    date = results['date']
-                    sistem = results['type']
-                    afect = results['platform']
-                    desc = results['description']
-                    url = results['app_url']
-                else:
-                    exp = True
-                    location = "No found in local."
-                    date = results['date']
-                    sistem = results['type']
-                    afect = results['platform']
-                    desc = results['description']
-                    url = results['app_url']
+
+                count += 1
+                location = results['file']
+                date = results['date']
+                sistem = results['type']
+                afect = results['platform']
+                desc = results['description']
+                url = results['app_url']
 
                 # Printeamos los datos
                 print(Fore.YELLOW + '[✚] EXPLOIT ENCONTRADO -> {} '.format(vlr))
@@ -637,21 +620,66 @@ def search_exploit(vulner):
         except TypeError:
             print(Fore.RED + '[-] No EXPLOIT encontrado en la base de datos.')
             print("-" * 50, "\n")
+    if count == 0:
+        print(Fore.RED + '[-] No se han ecnontrado exploits :·( ')
 
+
+def enter_arguments():
+    ip = None
+    while not ip:
+        try:
+            clean()
+            banner()
+            ip = input(Fore.BLUE + "[♦]" + Fore.YELLOW + " Enter IP --> ")
+            # change hostname to IPv4
+            if "help" in ip:
+                clean()
+                banner()
+                print_help()
+                ip = input(Fore.BLUE + "\n[♦]" + Fore.YELLOW + " Enter IP --> ")
+            elif re.findall("[.]", ip) == [".", ".", "."]:
+                veryfy = ip.split(".")
+                for num in veryfy:
+                    if int(num) > 255:
+                        print("\nDirección IPv4 inválida.")
+                        ip = None
+                try:
+                    target = socket.gethostbyname(ip)
+                    clean()
+                    funcions(target)
+                except socket.gaierror:
+                    print('Direccion IPv4 inválida')
+                    time.sleep(2)
+                    ip = None
+                except TypeError:
+                    print('Direccion IPv4 inválida')
+                    time.sleep(2)
+                    ip = None
+            else:
+                print(Fore.RED + "Dirección IPv4 inválida")
+                time.sleep(2)
+                ip = None
+
+        except ValueError:
+            print('Debes introducir NUMEROS...')
+            print(Fore.RED + """
+                ║
+                ╠══════► Obligatorio --> Direccion IP / Puertos a analizar.  
+                ║
+                ╠══════► Tipología   --> <name_script> <ip_address>  
+                ║  
+                ╚══════► EJEMPLO 	  --> port_scaner.py 127.0.0.1 """)
+            time.sleep(2.5)
 
 
 def main():
     try:
-        with open(location + file + extension, "a") as file_log:
-            file_log.write("\n SESION DE PORT SCANNER INICIADA --> {}.\n".format(datetime.now()) + "-" * 50)
         # Empezamos código limpiando pantalla
-        if os.name == "posix":
-            os.system("clear")
-        else:
-            os.system("cls")
-
+        clean()
+        # Miramos si eres admin / root
         is_admin()
-        check_start()
+        # Iniciamos la herramienta
+        enter_arguments()
 
     # Salida con CTRL + C
     except KeyboardInterrupt:
