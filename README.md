@@ -9,10 +9,12 @@
 Argumentos de la herramienta:
 
 [♦] Enter IP --> IP OBETIVO    
-  ║       
-  ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1\n""" +
 
-[♦] Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)\n'
+  ║       
+  ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1
+
+[♦] Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)
+
   ║               
   ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)
 
@@ -29,10 +31,10 @@ Argumentos de la herramienta:
 4. Tenemos la opcion de buscar en la base de datos de ExploitDb algún exploit público.
 
 5. Podemos abrir metasploit para utilziar la informacion recopilada
-   anteriomente para lo que tengamos que hacer""" +
+   anteriomente para lo que tengamos que hacer
 
 REQUISITOS:
             - NMAP
-            - Metasploit (opcional)""")
+            - Metasploit (opcional)
             
             
