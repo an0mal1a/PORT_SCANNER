@@ -4,11 +4,7 @@
 
 
 
-╔════════════════════════════════════════════════╗
-║                                                ║
-║    --  Usabilidad 'PORT SCANNER' v0.4.0  --    ║        
-║                                                ║
-╚════════════════════════════════════════════════╝
+  --  Usabilidad 'PORT SCANNER' v0.4.0  --       
 
 Argumentos de la herramienta:
 
