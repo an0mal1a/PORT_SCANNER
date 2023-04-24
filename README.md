@@ -3,31 +3,30 @@
 # Autor: __TownPablo__
 
 
-print(Fore.YELLOW + """
-        ╔════════════════════════════════════════════════╗
-        ║                                                ║
-        ║    --  Usabilidad 'PORT SCANNER' v0.4.0  --    ║        
-        ║                                                ║
-        ╚════════════════════════════════════════════════╝""" +
 
-          Fore.GREEN + "\n\nArgumentos de la herramienta:\n\n" +
-          Fore.BLUE + "[♦]" + Fore.YELLOW + " Enter IP --> IP OBETIVO\n" +
-    Fore.CYAN + """
-            ║       
-            ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1\n""" +
+╔════════════════════════════════════════════════╗
+║                                                ║
+║    --  Usabilidad 'PORT SCANNER' v0.4.0  --    ║        
+║                                                ║
+╚════════════════════════════════════════════════╝
 
-Fore.BLUE + "\n[♦]" + Fore.YELLOW + ' Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)\n' +
+Argumentos de la herramienta:
 
-          Fore.CYAN + """ 
-            ║       
-            ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)\n""" +
+[♦] Enter IP --> IP OBETIVO    
+  ║       
+  ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1\n""" +
+
+[♦] Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)\n'
+  ║               
+  ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)
 
 
-         Fore.YELLOW + "\n\n              -- PROCEDIMIENTO UTILIZADO POR LA HERRAMIENTA --\n\n" +
-Fore.CYAN + """1. Se ejecuta un escaneo de puertos para localizar los abiertos
+   -- PROCEDIMIENTO UTILIZADO POR LA HERRAMIENTA --
+          
+1. Se ejecuta un escaneo de puertos para localizar los abiertos
 
-2. Ejecutamos un analisis de servicios de dichos puertos abiertos, identificamos información sobre 
-   los servicios encontrados 
+2. Ejecutamos un analisis de servicios de dichos puertos abiertos,
+   identificamos información sobre los servicios encontrados 
 
 3. Iniciamos una busqueda de vulnerabilidades públicas en dichos servicios...
 
@@ -36,7 +35,7 @@ Fore.CYAN + """1. Se ejecuta un escaneo de puertos para localizar los abiertos
 5. Podemos abrir metasploit para utilziar la informacion recopilada
    anteriomente para lo que tengamos que hacer""" +
 
-Fore.GREEN + """\n\nREQUISITOS:\n
+REQUISITOS:
             - NMAP
             - Metasploit (opcional)""")
             
