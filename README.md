@@ -1,6 +1,6 @@
-# PORT_SCANNER
+#                   PORT_SCANNER
 
-# Autor: __TownPablo__
+#               Autor: __TownPablo__
 
 
 
@@ -10,13 +10,13 @@ Argumentos de la herramienta:
 
 [♦] Enter IP --> IP OBETIVO    
 
-  ║       
-  ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1
+    ║       
+    ╚═► EJEMPLO --> [♦] ENTER IP -> 127.0.0.1
 
 [♦] Introduce la cantidad de puertos a escanear - (EJ: 500 - Primeros 500)
 
-  ║               
-  ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)
+    ║               
+    ╚═► EJEMPLO --> Introduce cant ports --> 65535 (nº MAX ports)
 
 
    -- PROCEDIMIENTO UTILIZADO POR LA HERRAMIENTA --
