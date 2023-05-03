@@ -1,0 +1,7 @@
+colorama==0.4.6
+comtypes==1.1.14
+nvdlib==0.7.3
+pyExploitDb==0.2.9
+pyfiglet==0.8.post1
+sockets==1.0.0
+python-nmap==0.7.1
