@@ -69,9 +69,9 @@ else:
 
     # python wichSystem.py 127.0.0.1
 
-    if len(sys.argv) != 2:
+    """if len(sys.argv) != 2:
         print("\n[!] USO: python " + sys.argv[0] + " <ip_address>\n")
-        sys.exit(1)
+        sys.exit(1)"""
 
 
     def get_ttl(ip_addres):
