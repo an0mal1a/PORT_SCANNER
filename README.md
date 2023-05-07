@@ -37,11 +37,11 @@ Argumentos de la herramienta:
     REQUISITOS:
             - NMAP
             - Metasploit (opcional)
-            
-Se han añadido funciones para crear un archivo 'scan.log' en el escritorio.
-Se han añadido Host Discovery y Os_guess que en base el ttl no dice de forma simple el OS que corre 
-Se han corregido errores
-En mejora argumentos personalizados de "NMAP"
+    ---------------------------------------------------------------------------------------------------        
+    Se han añadido funciones para crear un archivo 'scan.log' en el escritorio.
+    Se han añadido Host Discovery y Os_guess que en base el ttl no dice de forma simple el OS que corre 
+    Se han corregido errores
+    En mejora argumentos personalizados de "NMAP"
 
 
 # Pip:
