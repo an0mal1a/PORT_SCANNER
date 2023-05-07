@@ -33,12 +33,15 @@ Argumentos de la herramienta:
 
     5. Podemos abrir metasploit para utilziar la informacion recopilada
        anteriomente para lo que tengamos que hacer
-
     
     REQUISITOS:
             - NMAP
             - Metasploit (opcional)
             
+Se han añadido funciones para crear un archivo 'scan.log' en el escritorio.
+Se han añadido Host Discovery y Os_guess que en base el ttl no dice de forma simple el OS que corre 
+Se han corregido errores
+En mejora argumentos personalizados de "NMAP"
 
 
 # Pip:
