@@ -1,6 +1,6 @@
 #                   PORT_SCANNER
 
-Autor: _TownPablo_ or _An0mal1a_
+Autor: _An0mal1a_
 
 
 
