@@ -140,9 +140,9 @@ def num_ports():
                     input('Has superado el número máximo de puertos.\n'
                           'Se reducirá a "65535" (numero máx. de puertos) -- [ENTER]')
                     ports = 65535
-                    write_file('[!] PORTS TO SCAN ---> 1-' + str(ports))
+                    write_file(f'[!] PORTS TO SCAN ---> 1-{str(ports)}\n')
                 else:
-                    write_file('[!] PORTS TO SCAN ---> 1-' + str(ports))
+                    write_file(f'[!] PORTS TO SCAN ---> 1-{str(ports)}\n')
                 break
             except ValueError:
                 print(Fore.RED + "Arguemnto inválido.\nPara obtener ayuda escriba --> '--help'")
@@ -166,7 +166,7 @@ def port_scan_banner():
                                                 
        [INFO] Herramienta para analizar puertos de una dirección IP 
              ║                                                 ║                                                                                             
-             ║                    v0.4.4.a2                    ║
+             ║                    v0.4.4.a3                    ║
              ╚══════► Escriba --help para obtener ayuda ◄══════╝
                     \n\n""")
 
@@ -189,7 +189,7 @@ m888N= 888>    'Y"      `   ^"F        'Y"        !   "*888888888"      R888" ` 
       @%                                                                                                                                             
     :" 
                                 [INFO] Herramienta para analizar puertos de una dirección IP                                                                                             
-                                     ║                    v0.4.4.a2                    ║
+                                     ║                    v0.4.4.a3                    ║
                                      ╚══════► Escriba --help para obtener ayuda ◄══════╝
     
     \n''')
@@ -209,7 +209,7 @@ def service_scan_bann():
 def help_discover():
     print(Fore.YELLOW + """
             ╔════════════════════════════════════════════════╗
-            ║   --  Usabilidad 'HOST DISCOVER' v0.4.4.a2 --  ║        
+            ║   --  Usabilidad 'HOST DISCOVER' v0.4.4.a3 --  ║        
             ╚════════════════════════════════════════════════╝\n\n""" +
 
           Fore.BLUE + "[♦]" + Fore.YELLOW + " Enter IP --> IP OBETIVO\n" +
@@ -341,20 +341,21 @@ def funcions():
         # Entramos en Port scan
         elif fun.lower() in ['a']:
             enter_arguments()
-            break
+            funcions()
 
         # Entramos en metasploit
         elif fun.lower() in ['b']:
-            input(Fore.YELLOW + "Esta funcion requiere que tengas instalado Metasploit [-ENTER-].")
+            input(Fore.YELLOW + "[!] Esta funcion requiere que tengas instalado Metasploit [-ENTER-].")
             try:
                 os.system('msfconsole')
                 break
             except Exception as error:
-                print(Fore.RED + "ERROR: {}\nPrueba a reinstalar o instalar metasploit.".format(error))
+                print(Fore.RED + "[!] ERROR: {}\nPrueba a reinstalar o instalar metasploit.".format(error))
 
         # Entramos en host discover
         elif fun.lower() in ['c']:
             host_discover()
+            funcions()
 
         else:
             print(Fore.RED + "Introduce una opción válida, has escogido '{}',"
@@ -370,8 +371,8 @@ def ping(ip_address):
         # Confirmación con PING?
 
         p = input(Fore.YELLOW + '[!] ¿Quieres hacer una confirmación con PING?\n\n' + Fore.GREEN
-                    + '\t[I] El host puede tener un FireWall bien configurado que bloquee este tipo de paquetes.\n'
-                    '\t     Si sabes que esta activo no ejecutes la confirmación.' + Fore.LIGHTRED_EX + '\n\t\t\t[S/n] -->')
+                                + '\t[I] El host puede tener un FireWall bien configurado que bloquee este tipo de paquetes.\n'
+            '\t   Si sabes que esta activo no ejecutes la confirmación.' + Fore.LIGHTRED_EX + '\n\n\t[S/n] --> ')
 
         # En línea o no
         if p in ['S', 's']:
@@ -416,7 +417,7 @@ def init_scan(target, now):
             port_scan_banner()
             init(now, target)
             for open_port in open_ports:
-                print(Fore.BLUE + "[♦]" + Fore.YELLOW + " - El puerto {} esta abierto.".format(open_port), end="")
+                print(Fore.BLUE + "[♦]" + Fore.YELLOW + f" - El puerto {open_port} esta abierto.", end="")
                 print("\n" + "-" * 55 + "\n", end="")
         s.close()
 
@@ -431,6 +432,7 @@ def init_scan(target, now):
                 end = datetime.now()
                 elapsed = end - now
                 print(Fore.YELLOW + '\n\nAnálisis interrumpido en el puerto {}.'.format(port))
+                write_file(f"\n[!] Port Scan interrupt in port {port} {elapsed}")
                 break
             except Exception as err:
                 print("Error inesperado : {}".format(err))
@@ -471,14 +473,19 @@ def scan(target):
 
     init_scan(target, now)
 
-    # Final del analisis
+    # Final del analisis sin puertos
     end = datetime.now()
     if not open_ports:
         elapsed = end - now
         print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format(elapsed))
         print(Fore.YELLOW + "\nNo se han detectado puertos abiertos. :_(")
+        write_file("[!] No open Ports exiting the program :'(")
         exit()
+
+    # Final del analisis con puertos encontrados
     print(Fore.YELLOW + "\nTiempo transcurrido --> {}".format((end - now)))
+    write_file("[*] END SCAN\n")
+    write_file(f"[*] ELAPSED --> {end - now}")
     ports_used(open_ports, target)
 
 
@@ -488,7 +495,7 @@ def ports_used(open_ports, target):
     p_str = (",".join(p_str))
     print(Fore.GREEN + "\n\nLos puertos abiertos son: {}".format(open_ports))
 
-    text = "[!] OPEN PORTS: {}".format(p_str)
+    text = "[!] OPEN PORTS: {}\n".format(p_str)
     write_file(text)
 
     # Iniciamos check services
@@ -620,9 +627,15 @@ def check_args(args, default_args, target, p_str):
         return default_args
 
 
+def write_info_in_file():
+    pass
+
+
 def check_serv(target, p_str, open_ports):
     # Preguntamos si quiere analisis de versiones de servicio
     serv_search()
+
+    write_file('[!] Service Scan initiate\n')
 
     # Hora del inicio
     init_scan_service = datetime.now()
@@ -634,7 +647,7 @@ def check_serv(target, p_str, open_ports):
 
     # Comprobar los buenos comandos
     args = check_args(args, default_args, target, p_str)
-
+    write_file(f'[*] Nmap comman line {args}\n')
 
     # Inicio de análisis de nmap
     clean()
@@ -708,6 +721,17 @@ def check_serv(target, p_str, open_ports):
 
                 print(Fore.GREEN + "\n" + "-" * 50, "\n")
 
+                text = f"""Puerto: {p}/{state} \n<--> Especificaciones del servicio <--> \n
+    [♦] Nombre: {name}    
+    Producto: {product}   
+    Versión: {version}  
+    Extra Info: {extrainfo}    
+    CPE: {cpe}  \n\n
+    Info: \n{script[0]}  \n""" + "\n" + "-" * 50 + "\n"
+
+                write_file(f"[!] FOUND INFORMATION ABOUT SERVICE!!\n")
+                write_file(text)
+
             else:
                 print(Fore.CYAN +
                       "Puerto: " + Fore.GREEN + f" {p}/{state} \n" + Fore.YELLOW +
@@ -717,6 +741,17 @@ def check_serv(target, p_str, open_ports):
                    Fore.GREEN + f"{extrainfo}" + Fore.YELLOW + "|  CPE:" + Fore.GREEN +
                   f"{cpe}  \n\nInfo: \n{script[0]}\n{script[1]}  \n")
                 print(Fore.GREEN + "\n"+"-" * 50, "\n")
+
+                text = f"""Puerto:  {p}/{state} \n<--> Información del servicio <--> \n
+    [♦] Nombre: {name}
+    Producto: {product}  
+    Versión: {version}   
+    Extra info: {extrainfo}    
+    CPE: {cpe}  \n\n
+    Info: \n{script[0]}\n{script[1]}  \n""" + "\n"+"-" * 50 + "\n"
+
+                write_file(f"[!] FOUND INFORMATION ABOUT SERVICE!!\n")
+                write_file(text)
 
         except KeyError:
             print(
@@ -728,6 +763,15 @@ def check_serv(target, p_str, open_ports):
                 Fore.YELLOW + "CPE:" + Fore.GREEN + f" {cpe} \n")
             print(Fore.GREEN + "\n" + "-" * 50)
 
+            text = f"""Puerto: {p}/{state} \n<--> Especificaciones del servicio <--> \n
+    [♦] Nombre: {name}    
+    Producto: {product}    
+    Versión: {version}  
+    Extra Info: {extrainfo}    
+    CPE: {cpe} \n""" + "\n" + "-" * 50 + "\n"
+
+            write_file(f"[!] FOUND INFORMATION ABOUT SERVICE!!\n")
+            write_file(text)
 
     if all_host is not None:
         if len(all_host) > 1:
@@ -746,14 +790,30 @@ def check_serv(target, p_str, open_ports):
 
 def print_information(target, end_service_scan, init_scan_service, dict_serv):
     # Tipo de sistema encontrado
-    ip = nm[target]['addresses']['ipv4']
-    ip_vendor = nm[target]['vendor']
-    if not ip_vendor:
+    try:
+        ip = nm[target]['addresses']['ipv4']
+    except Exception:
+        ip = "N/D"
+    try:
+        ip_vendor = nm[target]['vendor']
+    except Exception:
         ip_vendor = "N/D"
-    name_os = nm[target]['osmatch'][0]['name']
-    accuracy = nm[target]['osmatch'][0]['accuracy']
-    vendor = nm[target]['osmatch'][0]['osclass'][0]['vendor']
-    sys_cpe = nm[target]['osmatch'][0]['osclass'][0]['cpe'][0]
+    try:
+        name_os = nm[target]['osmatch'][0]['name']
+    except Exception:
+        name_os = "N/D"
+    try:
+        accuracy = nm[target]['osmatch'][0]['accuracy']
+    except Exception:
+        accuracy = "N/D"
+    try:
+        vendor = nm[target]['osmatch'][0]['osclass'][0]['vendor']
+    except Exception:
+        vendor = "N/D"
+    try:
+        sys_cpe = nm[target]['osmatch'][0]['osclass'][0]['cpe'][0]
+    except Exception:
+        sys_cpe = "N/D"
 
     def how_print():
         if ip_vendor == "N/D":
@@ -779,6 +839,11 @@ def print_information(target, end_service_scan, init_scan_service, dict_serv):
     elapsed = (end_service_scan - init_scan_service)
     print(Fore.GREEN + "\n" + "-" * 50)
     print(Fore.GREEN + "Tiempo transcurrido duante el analisis -> {}".format(elapsed))
+
+    write_file("\nINFORMACIÓN DEL SISTEMA OBJETIVO" + "═" * 50 + "►" + "\n" + "SISTEMA -->" + f" {name_os}\n"
+               + "═" * 50 + "►" + "\n" + "Precisión --> " + f"{accuracy}\n" + "═" * 50 + "►" + "\n" + "Vendedor --> " +
+                            f"{vendor}\n" + "═" * 50 + "►" + "\n" + "CPE --> " + f"{sys_cpe}\n" + "═" * 50 + "►" + "\n" +
+               "IP --> " + f"{ip}\n" + "═" * 50 + "►" + "\n" + "MAC & Vendor --> " + f"{how_print()}")
 
     vlnsrch(dict_serv)
 
@@ -1028,30 +1093,41 @@ def write_file(text):
 
     with open(location + filename, "a", encoding="utf-8") as log:
         now = str(time.ctime())
-        log.write("\n<<< " +now + " >>> " + text)
+        log.write("\n<<< " + now + " >>> " + text)
 
 
 def main():
     try:
-        text = """
-        PREPARING SCAN PORTS
-════════════════════════════════════\n"""
+        # Añadirmos el texto inicial en el archivo
+        text = "PREPARING SCAN PORTS\n" + "═" * 60 + "\n"
+
         # Creamos archivo y añadimos el inicio
         write_file(text)
+
         # Empezamos código limpiando pantalla
         clean()
+
         # Miramos si eres admin / root
         is_admin()
+
         # Verificamos NMAP
         verifi_tools()
+
         # Iniciamos la herramienta
         funcions()
 
     # Salida con CTRL + C
     except KeyboardInterrupt:
         print("\n\nSaliendo del programa...")
+
+        # Añadimos salida en el texto de salida
+        text = "EXITING PROGRAM...\n" + "═" * 60 + "\n"
+        write_file(text)
+
+        # Salimos del programa
         exit()
 
 
 if __name__ == "__main__":
+    # Ejecutamos la función principal
     main()
