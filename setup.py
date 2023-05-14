@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 name = "python_scan"
-version = "0.4.4.a"
+version = "0.4.4.a3"
 descripcion = "Herramienta para escaneo de puertos/vulners/explits en una IP"
 author = "__TownPablo__"
 author_email = "pablodiez024@proton.me"
-url = "https://github.com/TownPablo/PORT_SCANNER"
+url = "https://github.com/an0m4l1a/PORT_SCANNER"
 install_requires = [
     "colorama==0.4.6",
     "comtypes==1.1.14",
