@@ -1,5 +1,5 @@
-__version__ = "0.4.4.a1"
+__version__ = "v0.4.4.a3"
 __doc__ = "Herramienta para escaneo de puertos/vulners/explits en una IP"
-__autor__ = "An0mal1a"
+__autor__ = "an0m4l1a"
 __autor_name__ = "Pablo"
-__git__ = "https://github.com/TownPablo"
+__git__ = "https://github.com/an0m4l1a"
